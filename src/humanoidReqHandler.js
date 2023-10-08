@@ -2,9 +2,8 @@ const fs = require("fs");
 const rpn = require("request-promise-native");
 const URL = require("url-parse");
 const Response = require("./response");
-const zlib = require('zlib');
-
-
+//const zlib = require('zlib');
+const brotli = require('brotli-wasm');
 
 class HumanoidReqHandler {
 	constructor() {
@@ -53,7 +52,8 @@ class HumanoidReqHandler {
 	}
 	
 	async _decompressBrotli(res) {
-		res.body = await zlib.brotliDecompressSync(res.body);
+		//res.body = await zlib.brotliDecompress(res.body);
+		res.body = await Buffer.from(await brotli.decompress(res.body)).toString('utf8');
 		return res;
 	}
 	
